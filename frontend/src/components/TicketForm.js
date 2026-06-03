@@ -1,25 +1,33 @@
 import { useState } from "react"
 import { useTicketContext } from "../hooks/useTicketContext"
+import { useAuthContext } from "../hooks/useAuthContext"
 const TicketForm = () => {
 
     const { dispatch } = useTicketContext()
+    const { user } = useAuthContext()
+
 
     const [priority, setPriority] = useState('')
            const [status, setStatus] = useState('')
            const [title, setTitle] = useState('')
            const [description, setDescription] = useState('')
            const [error, setError] = useState(null)
-            const [emptyFields, setEmptyFields] = useState([])
+           const [emptyFields, setEmptyFields] = useState([])
+
            const handleSubmit = async (e) => {
                e.preventDefault()
-   
+            if(!user){
+                setError('You must be logged in')
+                return
+            }
            const bugticket = {title, description, priority, status}
    
            const response =  await fetch('/api/bugtrack/', {
                method: 'POST',
                body: JSON.stringify(bugticket),
                headers: {
-                   'Content-Type' : 'application/json'
+                   'Content-Type' : 'application/json',
+                   'Authorization' : `Bearer ${user.token}`
                }
            })
            const json = await response.json()

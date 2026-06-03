@@ -1,15 +1,27 @@
 import { useTicketContext } from "../hooks/useTicketContext"
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import { useAuthContext } from "../hooks/useAuthContext"
 const TicketDetails = ({ticket}) => {
     //using the props from home.js
     //remember props are used to pass data down
 
     const { dispatch } = useTicketContext()
-
+    const { user } = useAuthContext()
     const handleClick = async () => {
+
+        if(!user){
+            return
+            //doesnt continue with handleClick
+            //if no user detected
+        }
         const response = await fetch('/api/bugtrack/' + ticket._id, {
-            method: 'DELETE'
+            method: 'DELETE',
              //so here backend will try and delete from db
+            
+             headers: {
+                'Authorization' : `Bearer ${user.token}`
+             }
+            
         })
         const json = await response.json()
         //so if delete was success in backend only then 
@@ -17,16 +29,24 @@ const TicketDetails = ({ticket}) => {
         //frontend if youd like
         if(response.ok){
             dispatch({type: 'DELETE_BugTicket', payload: json})
-            //after this handle in ticketcontext
+            
         }
     }
     const handleUpdate = async () => {
+        if(!user){
+        return
+        //doesnt continue with handleClick
+        //if no user detected
+        }        
         const newStatus = ticket.status === 'Closed' ? 'In Progress' : 
                             ticket.status === 'In Progress' ? 'Open' : 'Closed'
 
-        const response =  await fetch('api/bugtrack/' + ticket._id, {
+        const response =  await fetch('/api/bugtrack/' + ticket._id, {
             method: 'PATCH',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type' : 'application/json',
+                'Authorization' : `Bearer ${user.token}
+                `},
             body: JSON.stringify({
                 status: newStatus
             })

@@ -8,11 +8,18 @@ const mongoose = require('mongoose')
 
 //get all tickets
 const getAllTickets =  async (req, res) => {
-    const bugticket = await BugTicket.find({}).sort({createdAt: -1})
+    try{
+    const user_id = req.user._id    
+    const bugticket = await BugTicket.find({ user_id }).sort({createdAt: -1})
     
     //{} all documents
     //-1 in descending order
     res.status(200).json(bugticket)
+
+    } catch(error) {
+        res.status(400).json({error: error.message})
+    }
+    
 }
 
 
@@ -60,8 +67,9 @@ const createTicket = async (req, res) => {
         return res.status(400).json({error: 'Please fill in all fields', emptyFields})
     }
     try{
+    const user_id = req.user._id
     const bugticket = await BugTicket.create({title, description, 
-                                              priority, status
+                                              priority, status, user_id
     })
     res.status(200).json(bugticket)
 }

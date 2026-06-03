@@ -1,5 +1,5 @@
 
-import { TicketContext } from "../components/context/ticketContext";
+import { TicketContext } from "../context/ticketContext";
 
 import { useContext } from "react";
 
@@ -7,7 +7,6 @@ import { useContext } from "react";
 export const useTicketContext = () => {
 
     const context = useContext(TicketContext)
-    //remember state and dispatch
 
     if(!context){
         throw Error('useTicketContext must be used inside a TicketContextProvider')

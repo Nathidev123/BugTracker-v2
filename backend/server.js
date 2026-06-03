@@ -8,19 +8,9 @@ const mongoose = require('mongoose')
 //created this after naming routes in bugtrack.js and exporting
 const bugtrackRoutes = require('./routes/bugtrack')
 
+//importing from user.js
+const userRoutes = require('./routes/user')
 
-//using mongoose to connect to db
-mongoose.connect(process.env.MONGO_URI)
-//only listen to requests when connected to db
-.then(() => {
-//listening for requests
-    app.listen(process.env.PORT, () => {
-    console.log('Connected and Listening on port 9000')
-})
-})
-.catch((error) => {
-    console.log(error)
-})
 const app = express()
 
 //creating middleware that checks if
@@ -38,12 +28,31 @@ app.use((req, res, next) => {
 
 //setting up route handler
 //this is local middleware testing api
-app.get('/', (req, res) => {
-    res.json({mssg: 'Welcome there buddah'})
+/*app.get('/', (req, res) => {
+    res.json({mssg: 'Welcome there mate'})
 })
-
+*/
 //creating a route
 app.use('/api/bugtrack/', bugtrackRoutes)
 //grabs all the different routes in bugtrack.js
 //and uses them on the app 
+
+//registering the user route
+app.use('/api/user', userRoutes)
+
+
+//using mongoose to connect to db
+mongoose.connect(process.env.MONGO_URI)
+//only listen to requests when connected to db
+.then(() => {
+//listening for requests
+    app.listen(process.env.PORT, () => {
+    console.log('Connected and Listening on port 9000')
+})
+})
+.catch((error) => {
+    console.log(error)
+})
+
+
 

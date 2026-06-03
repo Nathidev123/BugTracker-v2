@@ -1,7 +1,14 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 import Home from './pages/Home';
+import Login from './pages/Login'
+import Signup from './pages/signup'
 import Navbar from './components/Navbar';
+
+import { useAuthContext } from './hooks/useAuthContext'
+
 function App() {
+  const {user} = useAuthContext()
+
   return (
 
     <div className="App">
@@ -10,7 +17,19 @@ function App() {
       <div className='pages'>
         <Routes>
           <Route
-          path='/' element={<Home />}/>
+          path='/' 
+          element={ user ? <Home />: <Navigate to="/login"/>}
+          />
+          <Route
+          path='/login' 
+          element={ !user ? <Login />: <Navigate to="/"/>}
+          />
+
+          <Route
+          path='/signup' 
+          element={ !user ? <Signup />: <Navigate to="/"/>}
+          />
+
         </Routes>
       </div>
       </BrowserRouter>
@@ -20,6 +39,3 @@ function App() {
 }
 
 export default App;
-//to switch from one route to another, use Link
-/*<Link to="/">Home</Link>
-        <Link to="/admin">Admin</Link>*/

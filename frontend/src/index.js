@@ -2,14 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { TicketContextProvider } from './components/context/ticketContext';
+import { TicketContextProvider } from './context/ticketContext';
+import { AuthContextProvider } from './context/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <AuthContextProvider>
     <TicketContextProvider>
       <App />
     </TicketContextProvider>
+    </AuthContextProvider>
   </React.StrictMode>
 );
 

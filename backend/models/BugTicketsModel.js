@@ -19,9 +19,16 @@ const bugticketSchema = new Schema({
     status: {
         type: String,
         required: true
+    },
+    user_id: {
+    //associating every ticket with a particular
+    //user
+    type: String,
+    required: true
     }
     
 },
+
 {timestamps: true}
 )
 
